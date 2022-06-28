@@ -7,7 +7,7 @@ int Board::coordinateVerificator(int& y, int& x, int type) {
 		switch (type) {
 		case 1:							// when placing ships
 			if (board[y][x] == 4) {
-				return 0;
+				return 4;
 			}
 			else {
 				return 0;
@@ -33,12 +33,15 @@ bool Board::placementVerificator(std::vector<int> userInput) {
 	int y_ = userInput[0];
 	int x_ = userInput[1];
 	int typeSize = userInput[2];
-	coordinateVerificator(y_, x_, 1);
+	if (coordinateVerificator(y_, x_, 1) == 4) {
+		return false;
+		std::cout << "there is a ship already !!!";
+	}
 	int x = 0;
 	
 	for (int i = 0; i < typeSize; i++) {
-		y_ = userInput[i];
-		x_ = userInput[i + 1];
+		y_ = userInput[i]-1;
+		x_ = userInput[i + 1]-1;
 		for (int y = std::max(0, y_ - typeSize); y < std::min(size, y_ + typeSize); y++) {
 			if (board[y][x] == 4 && y != y_) {
 			return false;

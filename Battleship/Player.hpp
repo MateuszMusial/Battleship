@@ -21,7 +21,7 @@
 
         void waitingScreen();
 
-        bool isFormatCorrect(std::string inputCoordinates, int boardSize);
+        bool isFormatCorrect(std::string &inputCoordinates);
         bool checkNumbers(char c);
         std::vector <int> convertToInt(std::string inputCoordinates);
 

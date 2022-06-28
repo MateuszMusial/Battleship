@@ -6,31 +6,36 @@ std::vector <int> menu() {
 	int turns=0;
 	std::cout << "Welcome to battleship game" << std::endl;
 	Player p1;
-	p1.setName();
+	//p1.setName();
 	Player p2;
-	p2.setName();
+	//p2.setName();
 	choice.push_back(p1.userInput(1));
 	if (choice[0] == -1) {
+		
 		return choice;
 	}
+	size = choice[0];
 	choice.push_back(p1.userInput(2));
 	if (choice[1] == -1) {
 		return choice;
 	}
+	turns = choice[1];
 
 	choice = p1.howManyShips(p1.howManyFields(size));
 
 	Board b1(choice[0], choice[1], size);
+	b1.initialFill();
 	Board b1Oponnent(size);
+	b1Oponnent.initialFill();
 
+	std::vector <int> temp;
 	while (choice[0] != 0 && choice[1] != 0) {
-		std::vector <int> temp;
 		temp = p1.placeShips();
 
 		if (b1.placementVerificator(temp) == true) {
 			for (int i = 0; i < temp.size() / 2; i++) {
 
-				b1.setElement(temp[i], temp[i + 1], 4);
+				b1.setElement(temp[i]-1, temp[i + 1]-1, 4);
 			}
 			if (temp.size() > 3) {
 				b1.displayBoard();
@@ -45,13 +50,21 @@ std::vector <int> menu() {
 				choice[0] --;
 			}
 		}
+		else {
+			Sleep(3000);
+			system("cls");
+			b1.displayBoard();
+		}
+		
 	}
 
 
 	choice = p2.howManyShips(p2.howManyFields(size));
 
 	Board b2(choice[0], choice[1], size);
+	b2.initialFill();
 	Board b2Oponnent(size);
+	b2Oponnent.initialFill();
 
 	while (choice[0] != 0 && choice[1] != 0) {
 		std::vector <int> temp;
@@ -74,6 +87,11 @@ std::vector <int> menu() {
 					<< "of double ships." << std::endl;
 				choice[0] --;
 			}
+		}
+		else {
+			Sleep(3000);
+			system("cls");
+			b1.displayBoard();
 		}
 	}
 
