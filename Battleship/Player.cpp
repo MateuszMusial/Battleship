@@ -26,15 +26,15 @@ bool Player::checkNumbers(char c)
 }
 
 
-bool Player::isFormatCorrect(std::string inputCoordinates, int boardSize)
+bool Player::isFormatCorrect(std::string &inputCoordinates)
 {
 	int toInt = 0;
 	std::string temp;
 
-	transform(inputCoordinates.begin(), inputCoordinates.end(), inputCoordinates.begin(), toupper);
+	std::transform(inputCoordinates.cbegin(), inputCoordinates.cend(), inputCoordinates.begin(), [](unsigned char c) { return std::toupper(c); });
 
 
-	if (inputCoordinates[0] > char('A') + boardSize - 1)
+	if (!isalpha(inputCoordinates[0]))
 	{
 		std::cout << "Bad format! You need to enter a letter and number. Try again:" << std::endl;
 		return false;
@@ -44,15 +44,15 @@ bool Player::isFormatCorrect(std::string inputCoordinates, int boardSize)
 	{
 		for (int i = 1; i < inputCoordinates.size(); i++)
 		{
-			temp = inputCoordinates[i] ++;
+			temp = inputCoordinates[i];
 
 
-			if (checkNumbers(temp[i]))
+			if (checkNumbers(temp[i] == true && (inputCoordinates.size() -1) == i))
 			{
 				return true;
 			}
 
-			else
+			else if(checkNumbers(temp[i] == false))
 			{
 				std::cout << "Bad format! You need to enter a letter and number. Try again:  " << std::endl;
 				return false;
@@ -79,8 +79,8 @@ std::vector <int> Player::convertToInt(std::string inputCoordinates)
 
 	std::vector<int>inputStringToInt;
 
-	inputStringToInt.push_back(toInt);
 	inputStringToInt.push_back(firstLetter);
+	inputStringToInt.push_back(toInt);
 
 	return inputStringToInt;
 }
@@ -88,7 +88,7 @@ std::vector <int> Player::convertToInt(std::string inputCoordinates)
 
 std::vector<int> Player::placeShips() {
 	std::vector <int> oneShip;
-	int size{}; //	tymczasowe
+	bool format = false;
 	int choice{};
 	std::string coordinates1{};
 	std::string coordinates2{};
@@ -106,35 +106,40 @@ std::vector<int> Player::placeShips() {
 
 			std::cout << "Enter coordinate to place a ship: " << std::endl;
 			std::cin >> (coordinates1);
-
-			if (isFormatCorrect(coordinates1, size) == true)
+			format = isFormatCorrect(coordinates1);
+			if (format == true)
 			{
 				oneShip = convertToInt(coordinates1);
 				oneShip.push_back(1);
+				break;
 			}
-
+				
 		case 2:
 			std::cout << "Enter first coordinate to place a ship: " << std::endl;
 			std::cin >> coordinates1;
 
-			if (isFormatCorrect(coordinates1, size) == true)
+			format = isFormatCorrect(coordinates1);
+			if (format == true)
 			{
 				oneShip = convertToInt(coordinates1);
-
+				
 			}
 
 			std::cout << "Enter second  coordinate to place a ship: " << std::endl;
 			std::cin >> coordinates2;
-
-			if (isFormatCorrect(coordinates2, size) == true)
+			format = isFormatCorrect(coordinates2);
+			if (format == true)
 			{
-				oneShip = convertToInt(coordinates2);
+				std::vector<int> temp;
+				temp = convertToInt(coordinates2);
+				oneShip.insert(oneShip.end(), temp.begin(), temp.end());
 				oneShip.push_back(2);
+				break;
 			}
 		}
 		
 
-	} while (not isFormatCorrect(coordinates1, size) || not isFormatCorrect(coordinates2, size));
+	} while (format == false);
 
 	return oneShip;
 }
@@ -147,7 +152,7 @@ std::vector<int> Player::shooting()
 	std::cout << "Enter coordinate to shoot " << std::endl;
 	std::cin >> coordinates1;
 
-	if (isFormatCorrect(coordinates1, size) == true)
+	if (isFormatCorrect(coordinates1) == true)
 	{
 		target = convertToInt(coordinates1);
 	}
@@ -197,7 +202,7 @@ int Player::userInput(int selectMode) {
 
 int Player::howManyFields(int boardSize)
 {
-	int fields = boardSize ^ 2;                // funkcja liczy ile pol jest ogolem
+	int fields = pow(boardSize, 2);//boardSize ^ 2;                funkcja liczy ile pol jest ogolem   <- nie ma czegoœ takiego jak ^
 	return fields;
 }
 
