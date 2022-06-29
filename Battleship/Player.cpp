@@ -25,87 +25,111 @@ bool Player::checkNumbers(char c)
 	return c >= '0' && c <= '9';
 }
 
-
-bool Player::isFormatCorrect(std::string &inputCoordinates)
+bool Player::isFormatCorrect(std::string& inputCoordinates)
 {
 	int toInt = 0;
 	std::string temp;
 
 	std::transform(inputCoordinates.cbegin(), inputCoordinates.cend(), inputCoordinates.begin(), [](unsigned char c) { return std::toupper(c); });
 
-
-	if (!isalpha(inputCoordinates[0]))
-	{
-		std::cout << "Bad format! You need to enter a letter and number. Try again:" << std::endl;
+	if (inputCoordinates.size() < 2 || inputCoordinates.size() > 3 || !isalpha(inputCoordinates[0])) {
+		std::cout << "Bad format! You need to enter a letter and number. Try again : " << std::endl;
+		Sleep(2000);
+		system("cls");
 		return false;
 	}
 
-	else
-	{
-		for (int i = 1; i < inputCoordinates.size(); i++)
-		{
-			temp = inputCoordinates[i];
+	for (int i = 1; i < inputCoordinates.size(); i++) {
+		temp.push_back(inputCoordinates[i]);
 
-
-			if (checkNumbers(temp[i] == true && (inputCoordinates.size() -1) == i))
-			{
-				return true;
-			}
-
-			else if(checkNumbers(temp[i] == false))
-			{
-				std::cout << "Bad format! You need to enter a letter and number. Try again:  " << std::endl;
-				return false;
-			}
+		if (isdigit(inputCoordinates[i]) == false) {
+			std::cout << "Bad format! You need to enter a letter and number. Try again : " << std::endl;
+			Sleep(2000);
+			system("cls");
+			return false;
 		}
-		return true;
+
+		if (checkNumbers(temp[i] == true && (inputCoordinates.size() - 1) == i))
+		{
+			return true;
+		}
+		else if (checkNumbers(temp[i] == false))
+		{
+			std::cout << "Bad format! You need to enter a letter and number. Try again:  " << std::endl;
+			return false;
+		}
 	}
+	return true;
 }
 
 std::vector <int> Player::convertToInt(std::string inputCoordinates)
 {
 	char arr = inputCoordinates[0];
 	int firstLetter = (int)arr - 65 + 1;
-
 	int toInt = 0;
 	std::string temp;
 
 	for (int i = 1; i < inputCoordinates.size(); i++)
 	{
-		temp = inputCoordinates[i] ++;
+		temp.push_back(inputCoordinates[i]);
 	}
 
 	toInt = std::stoi(temp);
-
 	std::vector<int>inputStringToInt;
-
 	inputStringToInt.push_back(firstLetter);
 	inputStringToInt.push_back(toInt);
-
 	return inputStringToInt;
 }
 
-
-std::vector<int> Player::placeShips() {
+std::vector<int> Player::placeShips(Board* ptr) {
 	std::vector <int> oneShip;
 	bool format = false;
-	int choice{};
+	std::string choice{};
 	std::string coordinates1{};
 	std::string coordinates2{};
+	int choice1{ 0 };
+	bool isChoiceCorrect{};
 
-	std::cout << "Enter number to choose type of ship: " << std::endl;
-	std::cout << "1. One-block long " << std::endl;
-	std::cout << "2. Two-block long " << std::endl;
-	std::cin >> choice;
+	
+
+	do {
+		std::cout << "Enter number to choose type of ship: " << std::endl;
+		std::cout << "1. One-block long " << std::endl;
+		std::cout << "2. Two-block long " << std::endl;
+		std::cin >> choice;
+		isChoiceCorrect = isdigit(choice[0]);
+		if (choice == "exit"){
+			 oneShip.push_back(-1);
+			 return oneShip;
+		}
+		else if(isChoiceCorrect == false)
+		{
+			system("cls");
+			ptr->displayBoard();
+			std::cout << "Wrong value! Try again: " << std::endl;
+		}
+		else {
+			choice1 = std::stoi(choice);
+			if (choice1 < 1 || choice1 > 2) {
+
+				system("cls");
+				ptr->displayBoard();
+				std::cout << "Wrong value! Try again: " << std::endl;
+			}
+		}
+	} while (isChoiceCorrect == false || (choice1 < 1 || choice1 > 2));
 
 	do
 	{
-		switch (choice)
+		switch (choice1)
 		{
 		case 1:
-
 			std::cout << "Enter coordinate to place a ship: " << std::endl;
 			std::cin >> (coordinates1);
+			if (coordinates1 == "exit") {
+				oneShip.push_back(-1);
+				return oneShip;
+			}
 			format = isFormatCorrect(coordinates1);
 			if (format == true)
 			{
@@ -113,20 +137,33 @@ std::vector<int> Player::placeShips() {
 				oneShip.push_back(1);
 				break;
 			}
-				
+			else {
+				ptr->displayBoard();
+				break;
+			}
 		case 2:
 			std::cout << "Enter first coordinate to place a ship: " << std::endl;
 			std::cin >> coordinates1;
-
+			if (coordinates1 == "exit") {
+				oneShip.push_back(-1);
+				return oneShip;
+			}
 			format = isFormatCorrect(coordinates1);
 			if (format == true)
 			{
 				oneShip = convertToInt(coordinates1);
-				
-			}
 
+			}
+			else {
+				ptr->displayBoard();
+				break;
+			}
 			std::cout << "Enter second  coordinate to place a ship: " << std::endl;
 			std::cin >> coordinates2;
+			if (coordinates2 == "exit") {
+				oneShip.push_back(-1);
+				return oneShip;
+			}
 			format = isFormatCorrect(coordinates2);
 			if (format == true)
 			{
@@ -136,11 +173,12 @@ std::vector<int> Player::placeShips() {
 				oneShip.push_back(2);
 				break;
 			}
+			else {
+				ptr->displayBoard();
+				break;
+			}
 		}
-		
-
 	} while (format == false);
-
 	return oneShip;
 }
 
@@ -172,7 +210,7 @@ int Player::userInput(int selectMode) {
 			}
 
 			size = stoi(temp);
-			if (size > 5 < 26) {
+			if ((size > 5) && (size < 27)) {
 				return size;
 			}
 			else {
@@ -202,7 +240,7 @@ int Player::userInput(int selectMode) {
 
 int Player::howManyFields(int boardSize)
 {
-	int fields = pow(boardSize, 2);//boardSize ^ 2;                funkcja liczy ile pol jest ogolem   <- nie ma czegoœ takiego jak ^
+	int fields = pow(boardSize, 2);//boardSize ^ 2;                funkcja liczy ile pol jest ogolem   <- nie ma czego? takiego jak ^
 	return fields;
 }
 
@@ -212,7 +250,7 @@ std::vector<int> Player::howManyShips(int fields)
 
 	int howManyFieldsForShips, howManyShip1, howManyShip2;
 
-	howManyFieldsForShips = round(fields * 0.2);       // funkcja zlicza i zaokragla ile jest pol na statki
+	howManyFieldsForShips = round(fields * 0.1);       // funkcja zlicza i zaokragla ile jest pol na statki
 
 	if (howManyFieldsForShips % 2 == 1)
 	{                                                                // w zaleznosci od tego czy n jest parzyste czy nie funkcja wyswietla ile jest stakow 1 i 2.
