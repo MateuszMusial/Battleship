@@ -212,7 +212,7 @@ std::vector<int> Player::howManyShips(int fields)
 
 	int howManyFieldsForShips, howManyShip1, howManyShip2;
 
-	howManyFieldsForShips = round(fields * 0.4);       // funkcja zlicza i zaokragla ile jest pol na statki
+	howManyFieldsForShips = round(fields * 0.2);       // funkcja zlicza i zaokragla ile jest pol na statki
 
 	if (howManyFieldsForShips % 2 == 1)
 	{                                                                // w zaleznosci od tego czy n jest parzyste czy nie funkcja wyswietla ile jest stakow 1 i 2.

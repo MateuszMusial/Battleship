@@ -33,9 +33,10 @@ std::vector <int> menu() {
 		temp = p1.placeShips();
 
 		if (b1.placementVerificator(temp) == true) {
-			for (int i = 0; i < temp.size() / 2; i++) {
+			for (int i = 1; i < temp.size(); i++) {
 
-				b1.setElement(temp[i]-1, temp[i + 1]-1, 4);
+				b1.setElement(temp[i-1]-1, temp[i]-1, 4);
+				i++;
 			}
 			if (temp.size() > 3) {
 				b1.displayBoard();
@@ -71,9 +72,9 @@ std::vector <int> menu() {
 		temp = p2.placeShips();
 
 		if (b2.placementVerificator(temp) == true) {
-			for (int i = 0; i < temp.size() / 2; i++) {
+			for (int i = 1; i < temp.size(); i++) {
 
-				b2.setElement(temp[i], temp[i + 1], 4);
+				b2.setElement(temp[i-1]-1, temp[i]-1, 4);
 			}
 			if (temp.size() > 3) {
 				b2.displayBoard();
@@ -101,14 +102,14 @@ std::vector <int> menu() {
 
 	while (q > 0 || turns == 0) {
 		std::vector <int> temp;
-		int z;
+		int targetz;
 		do {
-			z = b2.coordinateVerificator(temp[0], temp[1], temp[2]);
+			targetz = b2.coordinateVerificator(temp[0], temp[1], temp[2]);
 			temp = p1.shooting();
 			temp.push_back(1);
-		} while (z < 0);
+		} while (targetz < 0);
 
-		switch (z)
+		switch (targetz)
 		{
 		case 0:
 			b1Oponnent.setElement(temp[0], temp[1], 1);
@@ -121,12 +122,12 @@ std::vector <int> menu() {
 		}
 
 		do {
-			z = b1.coordinateVerificator(temp[0], temp[1], temp[2]);
+			targetz = b1.coordinateVerificator(temp[0], temp[1], temp[2]);
 			temp = p2.shooting();
 			temp.push_back(1);
-		} while (z < 0);
+		} while (targetz < 0);
 
-		switch (z)
+		switch (targetz)
 		{
 		case 0:
 			b2Oponnent.setElement(temp[0], temp[1], 1);
