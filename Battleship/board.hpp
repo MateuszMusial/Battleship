@@ -9,9 +9,9 @@ private:
 	int size;
 	std::vector <std::vector<int>> board;
 public:
-
-	int coordinateVerificator(int& y, int& x, int type);
-	bool shipVerificator(std::vector<int>& userInput);
+	int changeStatus(int y, int x, Board* ptr1);
+	int coordinateVerificator(int& y, int& x, int type, Board* ptr1);
+	bool shipVerificator(std::vector<int>userInput);
 	bool placementVerificator(std::vector<int> userInput);
 	void initialFill();
 	void displayBoard();
